@@ -26,8 +26,11 @@
 
 const loginPage = require("../fixtures/pages/loginPage.json");
 const generalElements = require("../fixtures/pages/general.json");
+const inviteeBoxPage = require("../fixtures/pages/inviteeBoxPage.json");
+const inviteeDashboardPage = require("../fixtures/pages/inviteeDashboardPage.json");
 
 Cypress.Commands.add("login", (userName, password) => {
+  cy.visit("/login");
   cy.get(loginPage.loginField).type(userName);
   cy.get(loginPage.passwordField).type(password);
   cy.get(generalElements.submitButton).click({ force: true });
@@ -40,3 +43,18 @@ Cypress.Commands.add(
     cy.get(emailSelector).type(email);
   }
 );
+
+Cypress.Commands.add("approveParticipation", (boxID, wishes) => {
+  cy.get(".home-page__logo", { timeout: 10000 }).should("be.visible");
+  cy.visit(`/box/${boxID}/card`);
+  cy.get(generalElements.submitButton).click();
+  cy.get(generalElements.arrowRight).click();
+  cy.get(generalElements.arrowRight).click();
+  cy.get(inviteeBoxPage.wishesInput).type(wishes);
+  cy.get(generalElements.arrowRight).click();
+  cy.get(inviteeDashboardPage.noticeForInvitee)
+    .invoke("text")
+    .then((text) => {
+      expect(text).to.contain("Это — анонимный чат с вашим Тайным Сантой");
+    });
+});
