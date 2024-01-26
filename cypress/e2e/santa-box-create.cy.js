@@ -8,17 +8,6 @@ const inviteeDashboardPage = require("../fixtures/pages/inviteeDashboardPage.jso
 import { faker } from "@faker-js/faker";
 
 describe("user can create a box and run it", () => {
-  //пользователь 1 логинится
-  //пользователь 1 создает коробку
-  //пользователь 1 получает приглашение
-  //пользователь 2 переходит по приглашению
-  //пользователь 2 заполняет анкету
-  //пользователь 3 переходит по приглашению
-  //пользователь 3 заполняет анкету
-  //пользователь 4 переходит по приглашению
-  //пользователь 4 заполняет анкету
-  //пользователь 1 логинится
-  //пользователь 1 запускает жеребьевку
   let newBoxName = faker.word.noun({ length: { min: 5, max: 10 } });
   let wishes = faker.word.noun() + faker.word.adverb() + faker.word.adjective();
   let maxAmount = 50;
@@ -77,7 +66,7 @@ describe("user can create a box and run it", () => {
     cy.clearCookies();
   });
 
-  after("delete box", () => {
+  it("delete box", () => {
     cy.visit("/login");
     cy.login(users.userAutor.email, users.userAutor.password);
     cy.get(
@@ -91,6 +80,6 @@ describe("user can create a box and run it", () => {
     cy.get(":nth-child(2) > .form-page-group__main > .frm-wrapper > .frm").type(
       "Удалить коробку"
     );
-    cy.get(".btn-service").click();
+    cy.get(".btn-service").click({ multiple: true });
   });
 });
