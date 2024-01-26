@@ -1,5 +1,6 @@
 const users = require("../fixtures/users.json");
 const boxPage = require("../fixtures/pages/boxPage.json");
+const drawPage = require("../fixtures/pages/drawPage.json");
 const generalElements = require("../fixtures/pages/general.json");
 const dashboardPage = require("../fixtures/pages/dashboardPage.json");
 const invitePage = require("../fixtures/pages/invitePage.json");
@@ -15,7 +16,7 @@ describe("user can create a box and run it", () => {
   let inviteLink;
   let boxID = faker.random.alphaNumeric(5);
 
-  it.only("user logins and create a box", () => {
+  it("user logins and create a box", () => {
     cy.visit("/login");
     cy.login(users.userAutor.email, users.userAutor.password);
     cy.contains("Создать коробку").click();
@@ -40,7 +41,7 @@ describe("user can create a box and run it", () => {
       });
   });
 
-  it.only("add participants", () => {
+  it("add participants", () => {
     cy.get(generalElements.submitButton).click();
     cy.addUsersToTheList(
       inviteeBoxPage.nameFirstField,
@@ -69,7 +70,16 @@ describe("user can create a box and run it", () => {
         expect(text).to.include(users.user2.name);
         expect(text).to.include(users.user3.name);
       });
-    cy.clearCookies();
+  });
+
+  it.only("the draw verification", () => {
+    cy.get(drawPage.drawStartButton).click({ force: true });
+    cy.get(generalElements.submitButton).click();
+    cy.get(drawPage.drawConfirmButton).click();
+    cy.get(drawPage.drawResultButton).click();
+    cy.contains(
+      "На этой странице показан актуальный список участников со всей информацией."
+    );
   });
 
   it("approve as user1", () => {

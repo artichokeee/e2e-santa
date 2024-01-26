@@ -1,0 +1,8 @@
+{
+  "drawStartButton": "a > .txt-secondary--med",
+  "drawConfirmButton": ".santa-modal_content_buttons > .btn-main",
+  "drawResultButton": ".picture-notice__hint > a > .base--clickable",
+  "drawResetButton": ".picture-notice__hint > :nth-child(2)",
+  "drawResetConfirmButton": "cy.get('.santa-modal_content_buttons > .btn-main')",
+  "drawResetCancelButton": "cy.get('.btn-secondary')"
+}
