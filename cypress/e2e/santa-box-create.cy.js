@@ -13,12 +13,14 @@ describe("user can create a box and run it", () => {
   let maxAmount = 50;
   let currency = "Евро";
   let inviteLink;
+  let boxID = faker.random.alphaNumeric(5);
 
-  it("user logins and create a box", () => {
+  it.only("user logins and create a box", () => {
     cy.visit("/login");
     cy.login(users.userAutor.email, users.userAutor.password);
     cy.contains("Создать коробку").click();
     cy.get(boxPage.boxNameField).type(newBoxName);
+    cy.get(boxPage.boxIdField).clear().type(boxID);
     cy.get(generalElements.arrowRight).click();
     cy.get(boxPage.sixthIcon).click();
     cy.get(generalElements.arrowRight).click();
@@ -38,15 +40,38 @@ describe("user can create a box and run it", () => {
       });
   });
 
-  it("add participants", () => {
+  it.only("add participants", () => {
     cy.get(generalElements.submitButton).click();
-    cy.get(invitePage.inviteLink)
+    cy.addUsersToTheList(
+      inviteeBoxPage.nameFirstField,
+      inviteeBoxPage.emailFirstField,
+      users.user1.name,
+      users.user1.email
+    );
+    cy.addUsersToTheList(
+      inviteeBoxPage.nameSecondField,
+      inviteeBoxPage.emailSecondField,
+      users.user2.name,
+      users.user2.email
+    );
+    cy.addUsersToTheList(
+      inviteeBoxPage.nameThirdField,
+      inviteeBoxPage.emailThirdField,
+      users.user3.name,
+      users.user3.email
+    );
+    cy.get(inviteeBoxPage.inviteButton).click();
+    cy.visit(`/box/${boxID}`);
+    cy.get(".user-card__name")
       .invoke("text")
-      .then((link) => {
-        inviteLink = link;
+      .then((text) => {
+        expect(text).to.include(users.user1.name);
+        expect(text).to.include(users.user2.name);
+        expect(text).to.include(users.user3.name);
       });
     cy.clearCookies();
   });
+
   it("approve as user1", () => {
     cy.visit(inviteLink);
     cy.get(generalElements.submitButton).click();
