@@ -30,7 +30,6 @@ const inviteeBoxPage = require("../fixtures/pages/inviteeBoxPage.json");
 const inviteeDashboardPage = require("../fixtures/pages/inviteeDashboardPage.json");
 
 Cypress.Commands.add("login", (userName, password) => {
-  cy.visit("/login");
   cy.get(loginPage.loginField).type(userName);
   cy.get(loginPage.passwordField).type(password);
   cy.get(generalElements.submitButton).click({ force: true });

@@ -4,6 +4,7 @@ const drawPage = require("../fixtures/pages/drawPage.json");
 const generalElements = require("../fixtures/pages/general.json");
 const dashboardPage = require("../fixtures/pages/dashboardPage.json");
 const inviteeBoxPage = require("../fixtures/pages/inviteeBoxPage.json");
+const inviteeDashboardPage = require("../fixtures/pages/inviteeDashboardPage.json");
 import { faker } from "@faker-js/faker";
 
 describe("user can create a box and run it", () => {
@@ -12,9 +13,9 @@ describe("user can create a box and run it", () => {
   let maxAmount = 50;
   let currency = "Евро";
   let boxID = faker.random.alphaNumeric(5);
-  let cookieHeader;
 
   it("user logins and create a box", () => {
+    cy.visit("/login");
     cy.login(users.userAutor.email, users.userAutor.password);
     cy.contains("Создать коробку").click();
     cy.get(boxPage.boxNameField).type(newBoxName);
@@ -81,24 +82,42 @@ describe("user can create a box and run it", () => {
   });
 
   it("approve as user1", () => {
+    cy.visit("/login");
     cy.login(users.user1.email, users.user1.password);
     cy.approveParticipation(boxID, wishes);
+    cy.get(inviteeDashboardPage.noticeForInvitee)
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.contain("Это — анонимный чат с вашим Тайным Сантой");
+      });
     cy.clearCookies();
   });
 
   it("approve as user2", () => {
+    cy.visit("/login");
     cy.login(users.user2.email, users.user2.password);
     cy.approveParticipation(boxID, wishes);
+    cy.get(inviteeDashboardPage.noticeForInvitee)
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.contain("Это — анонимный чат с вашим Тайным Сантой");
+      });
     cy.clearCookies();
   });
 
   it("approve as user3", () => {
+    cy.visit("/login");
     cy.login(users.user3.email, users.user3.password);
     cy.approveParticipation(boxID, wishes);
+    cy.get(inviteeDashboardPage.noticeForInvitee)
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.contain("Это — анонимный чат с вашим Тайным Сантой");
+      });
     cy.clearCookies();
   });
 
-  it("delete box", () => {
+  after("delete box", () => {
     cy.request({
       method: "DELETE",
       headers: {
@@ -111,22 +130,3 @@ describe("user can create a box and run it", () => {
     });
   });
 });
-
-//   it("delete box", () => {
-//     cy.login(users.userAutor.email, users.userAutor.password);
-//     cy.getCookies().then((cookies) => {
-//       cookieHeader = cookies
-//         .map((cookie) => `${cookie.name}=${cookie.value}`)
-//         .join("; ");
-//     });
-//     cy.request({
-//       method: "DELETE",
-//       headers: {
-//         Cookie: cookieHeader,
-//       },
-//       url: `https://santa-secret.ru/api/box/${boxID}`,
-//     }).then((response) => {
-//       expect(response.status).to.equal(200);
-//     });
-//   });
-// });
