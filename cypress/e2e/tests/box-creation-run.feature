@@ -3,7 +3,7 @@ Feature: The user can create a box and run it
   Scenario: The user logins and creates a box
     Given the user is on the login page
     When the user logs in as "rusau.test@gmail.com" and "123456"
-      And the user creates a box
+    And the user creates a box
     Then the user is on the box page
 
   Scenario: The author adds participants in the box
@@ -23,7 +23,7 @@ Feature: The user can create a box and run it
   Scenario: Users approve a participation
     Given the user is on the login page
     When users log in as "<email>" and "<password>"
-      And the user approves the participation
+    And the user approves the participation
     Then the notice for the participant displays
     Examples:
       | email                  | password |
